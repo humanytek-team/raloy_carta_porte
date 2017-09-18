@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <record id="view_picking_form_embarque" model="ir.ui.view">
+            <field name="name">view_picking_form_embarque</field>
+            <field name="model">stock.picking</field>
+            <field name="priority">1</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//sheet/group/group[2]/div" position="after">
+                    <field name="embarque1_id"/>
+                    <field name="embarque2_id"/>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</openerp>

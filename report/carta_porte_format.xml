@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <report 
+            string="Carta Porte" 
+            id="action_carta_porte_format" 
+            model="carta.porte" 
+            report_type="qweb-pdf"
+            name="raloy_carta_porte.carta_porte_format" 
+            file="raloy_carta_porte.carta_porte_format" 
+        />
+
+
+        <template id="carta_porte_layout">
+            <!-- Multicompany -->
+            <t t-if="o and 'company_id' in o">
+                <t t-set="company" t-value="o.company_id"></t>
+            </t>
+            <t t-if="not o or not 'company_id' in o">
+                <t t-set="company" t-value="res_company"></t>
+            </t>
+
+            <t t-call="report.external_layout_header"/>
+
+
+            <t t-raw="0" />
+
+            <div class="footer">
+                <div class="row" style="font-size: 8px;">
+                    <table style="width: 100%">
+                        <tr style="text-align: left;padding-left:20px;border-bottom:1px dotted #AAAAAA;">
+                            <td style="width: 15%">
+                                <t>EM-EM-001-REV-00</t>
+                                <!--<span t-esc="   time.strftime('%Y-%m-%d')"/>
+                                <span t-esc="time.strftime('%H:%M')"/> -->
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </template>
+
+        <template id="carta_porte_format">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="raloy_carta_porte.carta_porte_layout">
+                        <div class="page">
+                            <div class="row">
+                                <div style="font-size:12px;padding-left: 20px;">
+                                <h4>
+                                    CARTA PORTE <span t-field="o.name"/>
+                                </h4>
+                                    <strong>FECHA DE SALIDA: </strong><span t-field="o.fecha_cierre"/><br/>
+                                    <strong>TRANSPORTE: </strong><span t-field="o.transportista_id"/><br/>
+                                    <strong>DESTINO: </strong><span t-field="o.destino"/><br/>
+                                    <strong>TIPO DE TRANSPORTE: </strong><span t-field="o.tipo_transporte"/><br/><br/>
+                                </div>
+
+                            </div>
+
+                            <table class="table table-condensed" style="font-size:12px">
+                              <thead>
+                                <t t-set="total" t-value="0" />
+                                <tr>
+                                    <th style="width:16%;"><strong>Remision</strong></th>
+                                    <th style="width:16%;"><strong>Nombre Cliente / Determinante</strong></th>
+                                    <th style="width:16%;"><strong>Ciudad</strong></th>
+                                    <th style="width:16%;" class="text-right"><strong>Unidades Producto</strong></th>
+                                    <th style="width:16%;" class="text-right"><strong>Unidades Litros</strong></th>
+                                    <th style="width:16%;" class="text-right"><strong>Unidades Cubicas</strong></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                <tr t-foreach="o.remision_ids" t-as="line">
+                                    <t>
+                                        <td><span t-field="line.remision_id.name"/></td>
+                                        <td><span t-field="line.remision_id.partner_id.name"/></td>
+                                        <td><span t-field="line.ciudad"/></td>
+                                        <td class="text-right"><span t-field="line.unidades_producto"/></td>
+                                        <td class="text-right"><span t-field="line.unidades_litros"/></td>
+                                        <td class="text-right"><span t-field="line.unidades_cubicas"/></td>
+                                        <t t-set="total" t-value="total + line.unidades_litros"/>
+                                    </t>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td class="text-right"><span t-esc="total"/></td>
+                                    <td></td>
+                                </tr>
+                              </tbody>
+                            </table>
+
+
+
+            <!-- <div class="row" style="font-size:9px"> -->
+            <div class="row" style="padding-left: 20px;">
+                <table class="table" style="font-size:12px;">
+                    <tr>
+                        <td colspan="3" ><strong>Tarifa Repartos</strong></td>
+                    </tr>
+                    <tr >
+                        <td style="width:33%;border-collapse: collapse;">
+                            <table style="border: 0px; border-collapse: collapse; ">
+                                <tr>
+                                    <td style="width:50%;padding:2px;padding-right: 9px;"><strong>Rango Inicial: </strong></td>
+                                    <td style="width:50%;padding:2px;"><span t-field="o.rango_inicial"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Rango Final: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.rango_final"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:33%;border-collapse: collapse;">
+                            <table style="border: 0px; border-collapse: collapse; ">
+                                <tr>
+                                    <td style="width:50%;padding:2px;padding-right: 9px;"><strong>Costo Maniobra: </strong></td>
+                                    <td style="width:50%;padding:2px;"><span t-field="o.costo_maniobra"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Costo Entrega: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.costo_entrega"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Costo Flete: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.costo_flete"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:33%;border-collapse: collapse;">
+                            <table style="border: 0px; border-collapse: collapse; ">
+                                <tr>
+                                    <td style="width:80%;padding:2px;padding-right: 9px;"><strong>Costo Excedente: </strong></td>
+                                    <td style="width:20%;padding:2px;"><span t-field="o.costo_excedente"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Costo X Unidad de Carga: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.costo_ucarga"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Costo Total: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.costo_total"/></td>
+                                </tr> 
+                            </table>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="3" ><strong>Recepcion y evaluacion</strong></td>
+                    </tr>
+
+                    <tr >
+                        <td style="width:33%;border-collapse: collapse;">
+                            <table style="border: 0px; border-collapse: collapse; ">
+                                <tr>
+                                    <td style="width:50%;padding:2px;padding-right: 9px;"><strong>Chofer: </strong></td>
+                                    <td style="width:50%;padding:2px;"><span t-field="o.chofer"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Tipo Transporte: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.tipo_transporte"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Capacidad: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.capacidad"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Tarifa: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.tarifa"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Sellos: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.sellos"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Carta Porte: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.carta_porte"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Placas: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.placas"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td style="width:33%;border-collapse: collapse;">
+                            <table style="border: 0px; border-collapse: collapse; ">
+                                <tr>
+                                    <td colspan="2" ><strong>Transporte Interno</strong></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Tanque: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.tanque"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Operador: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.operador"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Monto Gasolina: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.monto_gasolina"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Km: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.kms"/></td>
+                                </tr>
+                            </table>
+                        </td>
+            
+                    </tr>
+
+                    <tr>
+                        <td colspan="3" ><strong>Controles</strong></td>
+                    </tr>
+
+                    <tr >
+                        <td style="width:33%;border-collapse: collapse;">
+                            <table style="border: 0px; border-collapse: collapse; ">
+                                <tr>
+                                    <td style="width:50%;padding:2px;padding-right: 9px;"><strong>Observaciones: </strong></td>
+                                    <td style="width:50%;padding:2px;"><span t-field="o.observaciones"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Recibio Certificado de Calidad: </strong></td>
+                                    <span t-if="o.certificado==True">
+                                        <td><input type="checkbox" checked="True"/></td>
+                                    </span>
+                                    <span t-if="o.certificado==False">
+                                        <td><input type="checkbox"/></td>
+                                    </span>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Documentos: </strong></td>
+                                    <span t-if="o.documentos==True">
+                                        <td><input type="checkbox" checked="True"/></td>
+                                    </span>
+                                    <span t-if="o.documentos==False">
+                                        <td><input type="checkbox"/></td>
+                                    </span>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+                            <br/><br/><br/><br/>
+                            <div style="font-size:12px;">
+                                <center>
+                                    <table cellpadding="10">
+                                        <tr>
+                                            <td width="10%"></td>
+                                            <td width="30%">______________________________________<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]></td>
+                                            <td width="30%">______________________________________<![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]><![CDATA[&nbsp;]]></td>
+                                            <td width="30%">______________________________________</td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td align="center">Embarques</td>
+                                            <td align="center">Direccion de Operaciones</td>
+                                            <td align="center">Transportista</td>
+                                        </tr>
+                                    </table>
+                                </center>
+                                <br/><br/>
+                            </div>
+                        </div>
+                    </t>
+                 </t>
+             </t>
+        </template>
+    </data>
+</openerp>
