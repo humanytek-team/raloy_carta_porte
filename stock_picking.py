@@ -16,3 +16,8 @@ class StockPicking(models.Model):
 
     embarque1_id = fields.Many2one('carta.porte', 'Orden de embarque', compute='_compute_embarque')
     embarque2_id = fields.Many2one('carta.porte', 'Segundo embarque', compute='_compute_embarque')
+
+    partner_city = fields.Char('Ciudad',related='partner_id.city', store=True)
+    partner_zip = fields.Char('Zip',related='partner_id.zip', store=True)
+    partner_state = fields.Char('Estado del pais',related='partner_id.state_id.name', store=True)
+    partner_street2 = fields.Char('Colonia',related='partner_id.street2', store=True)
