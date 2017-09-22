@@ -105,6 +105,10 @@
                         <td style="width:33%;border-collapse: collapse;">
                             <table style="border: 0px; border-collapse: collapse; ">
                                 <tr>
+                                    <td style="width:50%;padding:2px;padding-right: 9px;"><strong>Factura: </strong></td>
+                                    <td style="width:50%;padding:2px;"><span t-field="o.factura"/></td>
+                                </tr>
+                                <tr>
                                     <td style="width:50%;padding:2px;padding-right: 9px;"><strong>Rango Inicial: </strong></td>
                                     <td style="width:50%;padding:2px;"><span t-field="o.rango_inicial"/></td>
                                 </tr>
@@ -201,6 +205,14 @@
                                 <tr>
                                     <td style="padding:2px;padding-right: 9px;"><strong>Monto Gasolina: </strong></td>
                                     <td style="padding:2px;"><span t-field="o.monto_gasolina"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Km inicial: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.km_inicial"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:2px;padding-right: 9px;"><strong>Km final: </strong></td>
+                                    <td style="padding:2px;"><span t-field="o.km_final"/></td>
                                 </tr>
                                 <tr>
                                     <td style="padding:2px;padding-right: 9px;"><strong>Km: </strong></td>

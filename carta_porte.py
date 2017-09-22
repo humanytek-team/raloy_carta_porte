@@ -31,7 +31,7 @@ class RemisionLine(models.Model):
 
     name= fields.Integer(String='Id de linea de remision',required=True, invicible=True)
     remision_id = fields.Many2one('stock.picking', 'Remision', required=True, domain="[('state', '=', 'done'),('picking_type_id.code', '=', 'outgoing')]")
-    ciudad = fields.Char(string='Ciudad')
+    ciudad = fields.Char(string='Ciudad',related='remision_id.partner_id.city')
     unidades_producto = fields.Float(string='Unidades producto', store=True)
     unidades_litros = fields.Float(string='Unidades litro', store=True)
     unidades_cubicas = fields.Float(string='Unidades cubicas', store=True)
@@ -40,7 +40,7 @@ class RemisionLine(models.Model):
 class CartaPorte(models.Model):
     _name = 'carta.porte'
     _description = 'Carta porte'
-    _inherit = ['mail.thread']
+    #_inherit = ['mail.thread']
 
     ###########################################
     #METODOS ORM
@@ -104,6 +104,21 @@ class CartaPorte(models.Model):
     #     company_id = self.penv['res.users']._get_company()
     #     return company_id
 
+    @api.depends('costo_maniobra','costo_entrega','costo_flete','costo_excedente','costo_ucarga')
+    def _compute_total(self):
+        #print 'PPPPP'
+        self.costo_total = self.costo_maniobra + self.costo_entrega + self.costo_flete \
+        + self.costo_excedente + self.costo_ucarga
+        return
+
+    @api.depends('km_inicial','km_final')
+    def _compute_kms(self):
+        #print 'xxxx'
+        #if self.km_final != 0:
+        self.kms = self.km_final - self.km_inicial
+        return
+
+
     #name = fields.Char('Carta Porte', required=True, readonly=True)
     name = fields.Char('Carta Porte', size=128, required=True, default=lambda self: _('New'), readonly=True)
     remision_ids = fields.One2many('carta.porte.line', 'name', 'Remisiones')
@@ -120,7 +135,10 @@ class CartaPorte(models.Model):
     costo_flete = fields.Float(string='Costo de flete')
     costo_excedente = fields.Float(string='Costo excedente')
     costo_ucarga = fields.Float(string='Costo X unidad de carga')
-    costo_total= fields.Float(string='Costo total')
+    
+    costo_total= fields.Float('Costo total de factura', compute='_compute_total', store=True)
+    factura = fields.Char(string='Factura')
+
     chofer = fields.Char(string='Chofer')
     tipo_transporte = fields.Char(string='Tipo de transporte')
     capacidad = fields.Char(string='Capacidad')
@@ -131,7 +149,11 @@ class CartaPorte(models.Model):
     tanque = fields.Char(string='Tanque')
     operador = fields.Char(string='Operador')
     monto_gasolina = fields.Float(string='Monto gasolina')
-    kms = fields.Char(string='Kms')
+    
+    km_inicial = fields.Float(string='Km Inicial')
+    km_final = fields.Float(string='Km Final')
+    kms = fields.Float('Kms Recorridos', compute='_compute_kms', store=True)
+
     observaciones = fields.Text(string='Observaciones')
     certificado = fields.Boolean(string='Recibio certificado de calidad')
     documentos = fields.Boolean(string='Recibio documentos')
