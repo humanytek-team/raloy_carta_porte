@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<openerp>
+	<data noupdate="1">
+
+
+		<!-- <record id="sequence_carta_porte_type" model="ir.sequence.type">
+			<field name="name">Tipo de Carta Portes</field>
+			<field name="code">carta.porte</field>
+		</record>
+ -->
+		<record id="sequence_carta_porte" model="ir.sequence">
+			<field name="name">Carta Porte</field>
+			<field name="code">carta.porte</field>
+			<field name="prefix"></field>
+			<field name="padding">5</field>
+			<field name="number_next">1</field>
+			<field name="number_increment">1</field>
+		</record>
+
+
+	</data>
+</openerp>
