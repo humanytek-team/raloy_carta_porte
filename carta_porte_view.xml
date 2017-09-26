@@ -10,7 +10,8 @@
             <field name="arch" type="xml">
                 <form string="Carta Porte" >
                 <header>
-                    <button name="action_block" string="Bloquear" type="object" class="oe_highlight" states="abierto" groups="raloy_carta_porte.carta_porte_admin" />
+                    <button name="action_route" string="En Ruta" type="object" class="oe_highlight" states="abierto" groups="raloy_carta_porte.carta_porte_usuario" />
+                    <button name="action_block" string="Bloquear" type="object" class="oe_highlight" states="abierto,ruta" groups="raloy_carta_porte.carta_porte_admin" />
                     <button name="action_unblock" string="Desbloquear" type="object" states="bloqueado" groups="raloy_carta_porte.carta_porte_admin" />
                     <field name="state" widget="statusbar"/>
                 </header>
@@ -23,6 +24,8 @@
                             <field name="destino" attrs="{'readonly':['|',('state','in','bloqueado')]}"/>
                         </group>
                         <group col="2">
+                            <field name="create_date"/>
+                            <field name="fecha_ruta"/>
                             <field name="fecha_cierre" attrs="{'readonly':['|',('state','in','bloqueado')]}" groups="raloy_carta_porte.carta_porte_admin"/>
                             <!-- <field name="company_id" attrs="{'readonly':['|',('state','in','bloqueado')]}"/> -->
                         </group>
@@ -139,6 +142,7 @@
                 <!-- <tree colors="blue:state == 'draft';grey:state == 'cancel';red:state not in ('cancel', 'done') and min_date &lt; current_date" string="Picking list"> -->
                 <tree colors="red:state not in ('bloqueado') and fecha_cierre &lt; current_date;" string="Carta Porte">
                 <!-- <tree string="Carta Porte"> -->
+                    <field name="create_date"/>
                     <field name="name"/>
                     <field name="transportista_id"/>
                     <field name="destino"/>

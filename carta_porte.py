@@ -18,10 +18,13 @@ class RemisionLine(models.Model):
                     unidades_producto += line.product_uom_qty
                     #unidades_litros += (line.product_uom_qty * line.product_id.uos_coeff)
                     unidades_cubicas += (line.product_uom_qty * line.product_id.volume)
+                    if res.remision_id:
+                        self.ciudad = res.remision_id.partner_id.city
 
             self.unidades_producto = unidades_producto
             self.unidades_litros = unidades_litros
             self.unidades_cubicas = unidades_cubicas
+                
         else:
             raise ValidationError(_('La remision seleccionada ya contiene 2 embarques'))
             #raise Warning(_("Error!"), _('La remision seleccionada ya contiene 2 embarques'))
@@ -29,9 +32,11 @@ class RemisionLine(models.Model):
 
 
 
-    name= fields.Integer(String='Id de linea de remision',required=True, invicible=True)
+    #name= fields.Integer(String='Id de linea de remision',required=True, invicible=True)
+    carta_id = fields.Many2one('carta.porte', string='Carta Porte', required=True, ondelete='cascade', index=True, copy=False)
     remision_id = fields.Many2one('stock.picking', 'Remision', required=True, domain="[('state', '=', 'done'),('picking_type_id.code', '=', 'outgoing')]")
-    ciudad = fields.Char(string='Ciudad',related='remision_id.partner_id.city')
+    #ciudad = fields.Char(string='Ciudad',related='remision_id.partner_id.city')
+    ciudad = fields.Char(string='Ciudad')
     unidades_producto = fields.Float(string='Unidades producto', store=True)
     unidades_litros = fields.Float(string='Unidades litro', store=True)
     unidades_cubicas = fields.Float(string='Unidades cubicas', store=True)
@@ -74,8 +79,8 @@ class CartaPorte(models.Model):
         #DE EXISTIR ELIMINA LAS LINEAS QUE YA ESTEN EN 2 EMBARQUES EN SUBORDINADO_IDS
         if 'remision_ids' in values:
             for remision in values['remision_ids']:
-                print 'remision: ',remision
-                if remision[2]:
+                #print 'remision: ',remision
+                if remision[2] and 'remision_id' in remision[2]:
                     res = self.env['carta.porte.line'].search([['remision_id', '=', remision[2]['remision_id'] ]])
                     if len(res) >= 2:
                         picking = self.env['stock.picking'].search([['id','=',remision[2]['remision_id']]])
@@ -98,6 +103,10 @@ class CartaPorte(models.Model):
     def action_unblock(self):
         self.state = 'abierto'
 
+    @api.multi
+    def action_route(self):
+        self.state = 'ruta'
+        self.fecha_ruta = fields.Date.today()
 
     # def _get_default_company(self):
     #     print '_get_default_company'
@@ -121,12 +130,15 @@ class CartaPorte(models.Model):
 
     #name = fields.Char('Carta Porte', required=True, readonly=True)
     name = fields.Char('Carta Porte', size=128, required=True, default=lambda self: _('New'), readonly=True)
-    remision_ids = fields.One2many('carta.porte.line', 'name', 'Remisiones')
+    remision_ids = fields.One2many('carta.porte.line', 'carta_id', 'Remisiones')
     #company_id = fields.Many2one('res.company', 'Compañia', required=True)
+    create_date = fields.Datetime(String='Fecha de creacion', readonly=True)
 
     transportista_id = fields.Many2one('res.partner', 'Transportista', required=True, domain="[('transportista', '=', True)]")
     destino = fields.Char(string='Destino')
     fecha_cierre = fields.Date(String='Fecha cierre', track_visibility='onchange', write=['raloy_carta_porte.carta_porte_admin'])
+    fecha_ruta = fields.Date(String='Fecha en ruta', readonly=True)
+
 
     rango_inicial = fields.Integer(string='Rango Inicial')
     rango_final = fields.Integer(string='Rango Final')
@@ -159,5 +171,6 @@ class CartaPorte(models.Model):
     documentos = fields.Boolean(string='Recibio documentos')
     state = fields.Selection([
         ('abierto','Abierto'),
+        ('ruta','En Ruta'),
         ('bloqueado','Bloqueado'),
         ],'Estado', default='abierto', readonly=True, track_visibility='onchange', help="Etapa")

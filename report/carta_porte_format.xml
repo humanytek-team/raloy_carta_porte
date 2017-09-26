@@ -50,10 +50,12 @@
                                 <h4>
                                     CARTA PORTE <span t-field="o.name"/>
                                 </h4>
-                                    <strong>FECHA DE SALIDA: </strong><span t-field="o.fecha_cierre"/><br/>
-                                    <strong>TRANSPORTE: </strong><span t-field="o.transportista_id"/><br/>
-                                    <strong>DESTINO: </strong><span t-field="o.destino"/><br/>
-                                    <strong>TIPO DE TRANSPORTE: </strong><span t-field="o.tipo_transporte"/><br/><br/>
+                                    <strong>Fecha de creacion: </strong><span t-field="o.create_date"/><br/>
+                                    <strong>Fecha de ruta: </strong><span t-field="o.fecha_ruta"/><br/>
+                                    <strong>Fecha de cierre: </strong><span t-field="o.fecha_cierre"/><br/>
+                                    <strong>Transporte: </strong><span t-field="o.transportista_id"/><br/>
+                                    <strong>Destino: </strong><span t-field="o.destino"/><br/>
+                                    <strong>Tipo de transporte: </strong><span t-field="o.tipo_transporte"/><br/><br/>
                                 </div>
 
                             </div>
