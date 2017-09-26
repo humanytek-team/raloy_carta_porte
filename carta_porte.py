@@ -18,9 +18,10 @@ class RemisionLine(models.Model):
                     unidades_producto += line.product_uom_qty
                     #unidades_litros += (line.product_uom_qty * line.product_id.uos_coeff)
                     unidades_cubicas += (line.product_uom_qty * line.product_id.volume)
-                    if res.remision_id:
-                        self.ciudad = res.remision_id.partner_id.city
+                    # if res.remision_id:
+                    #     self.ciudad = res.remision_id.partner_id.city
 
+            self.ciudad = self.remision_id and self.remision_id.partner_id and self.remision_id.partner_id.city or ''
             self.unidades_producto = unidades_producto
             self.unidades_litros = unidades_litros
             self.unidades_cubicas = unidades_cubicas
