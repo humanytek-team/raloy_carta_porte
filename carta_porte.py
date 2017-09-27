@@ -137,8 +137,8 @@ class CartaPorte(models.Model):
 
     transportista_id = fields.Many2one('res.partner', 'Transportista', required=True, domain="[('transportista', '=', True)]")
     destino = fields.Char(string='Destino')
-    fecha_cierre = fields.Date(String='Fecha cierre', track_visibility='onchange', write=['raloy_carta_porte.carta_porte_admin'])
-    fecha_ruta = fields.Date(String='Fecha en ruta', readonly=True)
+    fecha_cierre = fields.Datetime(String='Fecha cierre', track_visibility='onchange', write=['raloy_carta_porte.carta_porte_admin'])
+    fecha_ruta = fields.Datetime(String='Fecha en ruta', readonly=True)
 
 
     rango_inicial = fields.Integer(string='Rango Inicial')

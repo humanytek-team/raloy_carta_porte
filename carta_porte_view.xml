@@ -171,7 +171,10 @@
         <!-- MENUS -->
         
         <menuitem name="Carta porte" id="menu_carta_porte_action" parent="stock.menu_stock_warehouse_mgmt" action="carta_porte_action" sequence="10" groups="raloy_carta_porte.carta_porte_lectura"/>
-        <!-- <menuitem name="Carta porte" id="menu_carta_porte_action" parent="purchase.menu_purchase_control" action="carta_porte_action" sequence="10" groups="raloy_carta_porte.carta_porte_lectura"/> -->
+
+
+        <menuitem name="Carta porte" id="menu_carta_porte_action_sale" parent="sales_team.menu_base_partner" sequence="10" groups="raloy_carta_porte.carta_porte_lectura"/>
+        <menuitem name="Carta porte" id="menu_carta_porte_action_sale_submenu" parent="raloy_carta_porte.menu_carta_porte_action_sale" action="carta_porte_action" sequence="1" groups="raloy_carta_porte.carta_porte_lectura"/>
 
     </data>
 </openerp>
