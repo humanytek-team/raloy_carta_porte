@@ -25,7 +25,7 @@
     'description' : """
     Crea tipo de registro Carta Porte
     """,
-    'depends' : ['stock','purchase'],
+    'depends' : ['stock','purchase','contact_delivery_days'],
     'data': [
         'data.xml',
         'security/groups.xml',

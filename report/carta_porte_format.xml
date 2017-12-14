@@ -67,6 +67,9 @@
                                     <th style="width:16%;"><strong>Remision</strong></th>
                                     <th style="width:16%;"><strong>Nombre Cliente / Determinante</strong></th>
                                     <th style="width:16%;"><strong>Ciudad</strong></th>
+
+                                    <th style="width:16%;"><strong>Fecha tentativa de llegada</strong></th>
+
                                     <th style="width:16%;" class="text-right"><strong>Unidades Producto</strong></th>
                                     <th style="width:16%;" class="text-right"><strong>Unidades Litros</strong></th>
                                     <th style="width:16%;" class="text-right"><strong>Unidades Cubicas</strong></th>
@@ -78,6 +81,9 @@
                                         <td><span t-field="line.remision_id.name"/></td>
                                         <td><span t-field="line.remision_id.partner_id.name"/></td>
                                         <td><span t-field="line.ciudad"/></td>
+
+                                        <td><span t-field="line.fecha_tentativa"/></td>
+
                                         <td class="text-right"><span t-field="line.unidades_producto"/></td>
                                         <td class="text-right"><span t-field="line.unidades_litros"/></td>
                                         <td class="text-right"><span t-field="line.unidades_cubicas"/></td>

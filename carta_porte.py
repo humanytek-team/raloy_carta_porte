@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from openerp import models, fields, api, _
 from openerp.exceptions import UserError, RedirectWarning, ValidationError
+from datetime import datetime, timedelta, date
+import pytz
 
 class RemisionLine(models.Model):
     _name = 'carta.porte.line'
@@ -30,6 +32,26 @@ class RemisionLine(models.Model):
             raise ValidationError(_('La remision seleccionada ya contiene 2 embarques'))
             #raise Warning(_("Error!"), _('La remision seleccionada ya contiene 2 embarques'))
 
+    @api.multi
+    #@api.depends('remision_id')
+    def _compute_fecha_tentativa(self):
+        #print '_compute_fecha_tentativa'
+        for rec in self:
+            delivery_days = rec.remision_id and rec.remision_id.partner_id and rec.remision_id.partner_id.custom_delivery_days or 0
+            #print 'rec.remision_id.name: ',rec.remision_id.name
+            #print 'delivery_days: ',delivery_days
+
+            fecha_ruta = rec.carta_id and rec.carta_id.fecha_ruta or False
+            if fecha_ruta:
+                fecha_ruta = datetime.strptime(str(fecha_ruta),"%Y-%m-%d %H:%M:%S")
+            else:
+                fecha_ruta = datetime.strptime(str(fields.Datetime.now()),"%Y-%m-%d %H:%M:%S")
+            #print 'fecha_ruta: ',fecha_ruta
+
+            #product_delivery_date = timedelta(days=(rec.product_id.sale_delay)) + create_date
+            rec.fecha_tentativa = timedelta(days=(delivery_days)) + fecha_ruta
+            #print 'rec.fecha_tentativa: ',rec.fecha_tentativa
+
 
 
 
@@ -41,6 +63,9 @@ class RemisionLine(models.Model):
     unidades_producto = fields.Float(string='Unidades producto', store=True)
     unidades_litros = fields.Float(string='Unidades litro', store=True)
     unidades_cubicas = fields.Float(string='Unidades cubicas', store=True)
+
+    fecha_tentativa = fields.Datetime(string='Fecha tentativa de llegada', compute='_compute_fecha_tentativa')
+
 
 
 class CartaPorte(models.Model):
